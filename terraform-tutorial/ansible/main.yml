@@ -1,0 +1,8 @@
+- name: Example
+  hosts: all
+  remote_user: admin
+  become: yes
+
+  tasks:
+    - name: Ping hosts
+      ansible.builtin.ping:
