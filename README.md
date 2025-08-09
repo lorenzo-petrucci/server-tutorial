@@ -42,7 +42,6 @@ OS name: "linux", version: "6.1.0-37-amd64", arch: "amd64", family: "unix"
 
 ```
 ## Usage
-### Infrastructure
 - add credentials for the aws profile used in `main.tf`
 ```
 cat ~/.aws/credentials 
@@ -54,15 +53,6 @@ aws_secret_access_key = <AWS_SECRET_ACCESS_KEY>
 ```
 make terraform
 ```
-- configure remote host, copy source code and start backend
-```
-make ansible
-```
-- connect to the resource
-```
-make ssh
-```
-### Backend
 - build source code and deploy on remote resource
 ```
 make deploy
@@ -70,18 +60,4 @@ make deploy
 - test remote endpoint
 ```
 make curl-test
-```
-- build source code and deploy in a local container
-```
-make deploy-local
-```
-- local endpoints
-```
-curl http://localhost:8080/spring-example/api
-curl http://localhost:8080/spring-example/api -d 'example=test'
-curl http://localhost:8080/spring-example/api -H 'Content-type: application/json' -d '{"example":"test"}'
-```
-- read logs in local container:
-```
-make catalina-access
 ```
