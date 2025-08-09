@@ -1,10 +1,64 @@
 # FIXME: https://docs.ansible.com/ansible-core/2.17/reference_appendices/interpreter_discovery.html
 
-- name: Example
+- name: Main
   hosts: all
   remote_user: admin
   become: yes
+  vars: # FIXME: vars list is deprecated
+   - backend: ../../code/target/spring-example.war 
+   - dockerfile: ../../code/Dockerfile
+   - image: spring-example-image
+   - container: spring-example
 
   tasks:
     - name: Ping hosts
       ansible.builtin.ping:
+
+    - name: Copy backend to host
+      ansible.builtin.copy:
+        src: "{{backend}}"
+        dest: /tmp/target/
+        mode: "0755"
+        
+    - name: Copy dockerfile to host
+      ansible.builtin.copy:
+        src: "{{dockerfile}}"
+        dest: /tmp/
+        mode: "0755"
+
+    - name: Install GPG
+      ansible.builtin.apt:
+       name: gnupg2
+       state: latest
+       update_cache: yes # because https://github.com/geerlingguy/ansible-role-kibana/issues/65
+
+    - name: Add docker GPG apt key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: Add docker repository
+      ansible.builtin.apt_repository:
+        repo: deb https://download.docker.com/linux/debian bookworm stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      ansible.builtin.apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Build docker image
+      community.docker.docker_image:
+        name: "{{image}}"
+        build:
+          path: "/tmp"
+        source: build
+
+    - name: Start container
+      community.docker.docker_container:
+        name: "{{container}}"
+        image: "{{image}}:latest"
+        state: started
+        restart_policy: always
+        ports: "80:8080"

@@ -34,7 +34,9 @@ docker-build:
 docker-run:
 	docker run -d -p 8080:8080 --name spring-example spring-example-image
 
-deploy: build docker-build docker-run
+deploy-local: build docker-build docker-run
+
+deploy: build ansible
 
 docker-exec-bash:
 	docker exec -it spring-example bash
@@ -53,3 +55,6 @@ docker-stop:
 
 clean: docker-stop
 	docker rm spring-example
+
+curl-test:
+	curl $(HOST)/spring-example/api -vvv
