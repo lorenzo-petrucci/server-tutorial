@@ -1,5 +1,5 @@
 # SERVER TUTORIAL
-Tutorial project of a java web server with test endpoints, deployed in a docker container on an amazon ec2 container, provisioned with terraform and configured using ansible.  
+Tutorial project of a java web server with test endpoints, deployed in a docker container on an amazon ec2 resource, provisioned with terraform and configured using ansible.
 The project is (and will be) a work in progress.
 ## Dependencies
 - aws is used to host the resources
