@@ -1,7 +1,7 @@
-# server tutorial
+# SERVER TUTORIAL
 Tutorial project of a java web server with test endpoints, deployed in a docker container on an amazon ec2 container, provisioned with terraform and configured using ansible.  
 The project is (and will be) a work in progress.
-## dependancies
+## Dependencies
 - aws is used to host the resources
 ```
 aws --version
@@ -26,7 +26,7 @@ ansible [core 2.17.13]
   jinja version = 3.1.2
   libyaml = True
 ```
-- the project run in a docker container built from this image:+ `tomcat:11.0.1-jdk21-temurin-noble`
+- the project run in a docker container built from this image: `tomcat:11.0.1-jdk21-temurin-noble`
 ```
 docker --version
 Docker version 28.3.3, build 980b856
@@ -41,9 +41,9 @@ Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "6.1.0-37-amd64", arch: "amd64", family: "unix"
 
 ```
-## usage
-### infrastructure
-- configure the aws profile used in `main.tf` in aws credentials file
+## Usage
+### Infrastructure
+- add credentials for the aws profile used in `main.tf`
 ```
 cat ~/.aws/credentials 
 [terraform-tutorial]
@@ -54,7 +54,7 @@ aws_secret_access_key = <AWS_SECRET_ACCESS_KEY>
 ```
 make terraform
 ```
-- ping the created resource with ansible
+- configure remote host, copy source code and start backend
 ```
 make ansible
 ```
@@ -62,18 +62,26 @@ make ansible
 ```
 make ssh
 ```
-### backend
-- build source code and deploy in a local container
+### Backend
+- build source code and deploy on remote resource
 ```
 make deploy
 ```
-- test endpoints
+- test remote endpoint
+```
+make curl-test
+```
+- build source code and deploy in a local container
+```
+make deploy-local
+```
+- local endpoints
 ```
 curl http://localhost:8080/spring-example/api
 curl http://localhost:8080/spring-example/api -d 'example=test'
 curl http://localhost:8080/spring-example/api -H 'Content-type: application/json' -d '{"example":"test"}'
 ```
-- read logs in container:
+- read logs in local container:
 ```
 make catalina-access
 ```
