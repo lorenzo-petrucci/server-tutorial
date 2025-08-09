@@ -1,0 +1,10 @@
+# FIXME: https://docs.ansible.com/ansible-core/2.17/reference_appendices/interpreter_discovery.html
+
+- name: Example
+  hosts: all
+  remote_user: admin
+  become: yes
+
+  tasks:
+    - name: Ping hosts
+      ansible.builtin.ping:
