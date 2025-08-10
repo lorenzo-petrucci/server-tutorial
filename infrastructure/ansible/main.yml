@@ -48,6 +48,16 @@
         state: latest
         update_cache: true
 
+    - name: Ensure container is absent
+      community.docker.docker_container:
+        name: "{{container}}"
+        state: absent
+
+    - name: Ensure image is absent
+      community.docker.docker_image:
+        name: "{{image}}"
+        state: absent
+
     - name: Build docker image
       community.docker.docker_image:
         name: "{{image}}"
