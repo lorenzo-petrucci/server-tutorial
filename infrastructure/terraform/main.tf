@@ -46,7 +46,7 @@ resource "aws_security_group" "example" {
 
 resource "aws_key_pair" "example" {
   key_name   = "key"
-  public_key = "${file("~/.ssh/terraform_tutorial.pub")}"
+  public_key = "${file("~/.ssh/server_tutorial.pub")}"
 }
 
 resource "aws_instance" "example" {

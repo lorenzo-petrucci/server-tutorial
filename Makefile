@@ -15,10 +15,10 @@ tf-destroy:
 terraform: tf-plan tf-apply
 
 ansible:
-	cd infrastructure/ansible && ansible-playbook main.yml --private-key ~/.ssh/terraform_tutorial -i hosts
+	cd infrastructure/ansible && ansible-playbook main.yml --private-key ~/.ssh/server_tutorial -i hosts
 
 ssh:
-	ssh admin@$(HOST) -i ~/.ssh/terraform_tutorial
+	ssh admin@$(HOST) -i ~/.ssh/server_tutorial
 
 echo-hosts:
 	echo $(HOST)
