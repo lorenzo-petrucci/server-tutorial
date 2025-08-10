@@ -9,14 +9,14 @@ terraform {
 
 provider "aws" {
   region = "eu-central-1"
-  profile = "terraform-tutorial"
+  profile = "server-tutorial"
 }
 
 resource "aws_default_vpc" "example" {
 }
 
 resource "aws_security_group" "example" {
-  name = "allow-ssh"
+  name = "example-name"
   vpc_id = "${aws_default_vpc.example.id}"
   ingress {
     protocol   = "tcp"
@@ -49,19 +49,19 @@ resource "aws_key_pair" "example" {
   public_key = "${file("~/.ssh/terraform_tutorial.pub")}"
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "example" {
   ami = "ami-04a8220c151d8840a"
   instance_type = "t3.micro"
   key_name = aws_key_pair.example.key_name
   vpc_security_group_ids = [ aws_security_group.example.id ]
   tags = {
-    Name = "terraform tutorial"
+    Name = "server tutorial"
   }
 }
 
 resource "local_file" "hosts" {
   content = templatefile("../ansible/inventory.tmpl", {
-    value = aws_instance.web.public_ip
+    value = aws_instance.example.public_ip
   })
   filename = "../ansible/hosts"
 }
