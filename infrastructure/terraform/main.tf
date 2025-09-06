@@ -15,15 +15,26 @@ provider "aws" {
 resource "aws_default_vpc" "server-tutorial" {
 }
 
-resource "aws_security_group" "server-tutorial" {
-  name = "server-tutorial-name"
-  vpc_id = "${aws_default_vpc.server-tutorial.id}"
+resource "aws_security_group" "allow_ssh" {
+  name = "server-tutorial-ssh"
+  vpc_id = aws_default_vpc.server-tutorial.id
   ingress {
     protocol   = "tcp"
     from_port  = 22
     to_port    = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
+  egress {
+    protocol   = "-1"
+    from_port  = 0
+    to_port    = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "allow_web" {
+  name = "server-tutorial-web"
+  vpc_id = aws_default_vpc.server-tutorial.id
   ingress {
     protocol   = "tcp"
     from_port  = 80
@@ -46,14 +57,14 @@ resource "aws_security_group" "server-tutorial" {
 
 resource "aws_key_pair" "server-tutorial" {
   key_name   = "key"
-  public_key = "${file("~/.ssh/server_tutorial.pub")}"
+  public_key = file("~/.ssh/server_tutorial.pub")
 }
 
 resource "aws_instance" "server-tutorial" {
   ami = "ami-04a8220c151d8840a"
   instance_type = "t3.micro"
   key_name = aws_key_pair.server-tutorial.key_name
-  vpc_security_group_ids = [ aws_security_group.server-tutorial.id ]
+  vpc_security_group_ids = [ aws_security_group.allow_ssh.id, aws_security_group.allow_web.id ]
   tags = {
     Name = "server tutorial"
   }
