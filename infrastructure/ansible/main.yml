@@ -5,10 +5,7 @@
   remote_user: admin
   become: yes
   vars: # FIXME: vars list is deprecated
-   - backend: ../../code/target/spring-example.war 
-   - dockerfile: ../../code/Dockerfile
-   - image: spring-example-image
-   - container: spring-example
+   - project: spring-example
 
   tasks:
     - name: Ping hosts
@@ -16,14 +13,8 @@
 
     - name: Copy backend to host
       ansible.builtin.copy:
-        src: "{{backend}}"
+        src: ../../code/target/spring-example.war
         dest: /tmp/target/
-        mode: "0755"
-        
-    - name: Copy dockerfile to host
-      ansible.builtin.copy:
-        src: "{{dockerfile}}"
-        dest: /tmp/
         mode: "0755"
 
     - name: Install GPG
@@ -50,25 +41,15 @@
 
     - name: Ensure container is absent
       community.docker.docker_container:
-        name: "{{container}}"
+        name: "{{project}}"
         state: absent
-
-    - name: Ensure image is absent
-      community.docker.docker_image:
-        name: "{{image}}"
-        state: absent
-
-    - name: Build docker image
-      community.docker.docker_image:
-        name: "{{image}}"
-        build:
-          path: "/tmp"
-        source: build
 
     - name: Start container
       community.docker.docker_container:
-        name: "{{container}}"
-        image: "{{image}}:latest"
+        name: "{{project}}"
+        image: "tomcat:11.0.1-jdk21-temurin-noble"
         state: started
         restart_policy: always
         ports: "80:8080"
+        volumes:
+          - "/tmp/target:/usr/local/tomcat/webapps/"
