@@ -5,3 +5,4 @@ infrastructure/terraform/.terraform/
 infrastructure/terraform/terraform.tfstate
 infrastructure/terraform/terraform.tfstate.backup
 credentials/
+.idea
