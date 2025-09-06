@@ -5,7 +5,7 @@
   remote_user: admin
   become: yes
   vars: # FIXME: vars list is deprecated
-   - project: spring-example
+   - project: server-tutorial
 
   tasks:
     - name: Ping hosts
@@ -13,7 +13,7 @@
 
     - name: Copy backend to host
       ansible.builtin.copy:
-        src: ../../code/target/spring-example.war
+        src: ../../code/target/server-tutorial.war
         dest: /tmp/target/
         mode: "0755"
 

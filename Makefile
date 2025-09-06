@@ -28,33 +28,34 @@ echo-hosts:
 build:
 	cd code && mvn clean install
 
+# fixme: remove docker build as in ansible playbook
 docker-build:
-	cd code && docker build -t spring-example-image .
+	cd code && docker build -t server-tutorial-image .
 
 docker-run:
-	docker run -d -p 8080:8080 --name spring-example spring-example-image
+	docker run -d -p 8080:8080 --name server-tutorial server-tutorial-image
 
 deploy-local: build docker-build docker-run
 
 deploy: build ansible
 
 docker-exec-bash:
-	docker exec -it spring-example bash
+	docker exec -it server-tutorial bash
 
 catalina-logs:
-	docker exec -it spring-example bash -c "cat logs/catalina.*"
+	docker exec -it server-tutorial bash -c "cat logs/catalina.*"
 
 catalina-localhost:
-	docker exec -it spring-example bash -c "cat logs/localhost.*"
+	docker exec -it server-tutorial bash -c "cat logs/localhost.*"
 
 catalina-access:
-	docker exec -it spring-example bash -c "cat logs/localhost_access*"
+	docker exec -it server-tutorial bash -c "cat logs/localhost_access*"
 
 docker-stop:
-	docker stop spring-example
+	docker stop server-tutorial
 
 clean: docker-stop
-	docker rm spring-example
+	docker rm server-tutorial
 
 curl-test:
-	curl $(HOST)/spring-example/api -vvv
+	curl $(HOST)/server-tutorial/api -vvv

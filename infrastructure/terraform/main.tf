@@ -12,12 +12,12 @@ provider "aws" {
   profile = "server-tutorial"
 }
 
-resource "aws_default_vpc" "example" {
+resource "aws_default_vpc" "server-tutorial" {
 }
 
-resource "aws_security_group" "example" {
-  name = "example-name"
-  vpc_id = "${aws_default_vpc.example.id}"
+resource "aws_security_group" "server-tutorial" {
+  name = "server-tutorial-name"
+  vpc_id = "${aws_default_vpc.server-tutorial.id}"
   ingress {
     protocol   = "tcp"
     from_port  = 22
@@ -44,16 +44,16 @@ resource "aws_security_group" "example" {
   }
 }
 
-resource "aws_key_pair" "example" {
+resource "aws_key_pair" "server-tutorial" {
   key_name   = "key"
   public_key = "${file("~/.ssh/server_tutorial.pub")}"
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "server-tutorial" {
   ami = "ami-04a8220c151d8840a"
   instance_type = "t3.micro"
-  key_name = aws_key_pair.example.key_name
-  vpc_security_group_ids = [ aws_security_group.example.id ]
+  key_name = aws_key_pair.server-tutorial.key_name
+  vpc_security_group_ids = [ aws_security_group.server-tutorial.id ]
   tags = {
     Name = "server tutorial"
   }
@@ -61,7 +61,7 @@ resource "aws_instance" "example" {
 
 resource "local_file" "hosts" {
   content = templatefile("../ansible/inventory.tmpl", {
-    value = aws_instance.example.public_ip
+    value = aws_instance.server-tutorial.public_ip
   })
   filename = "../ansible/hosts"
 }
